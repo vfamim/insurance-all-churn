@@ -1,23 +1,31 @@
 # Table of Contents
 
-1. [Introduction](#introduction)
-2. [Data](#data)
-   1. [Data Source](#data-source)
-   2. [Data Dimension](#data-dimension)
-   3. [Columns Description](#columns-description)
-3. [Exploratory Data Analysis](#exploratory-data-analysis)
-   1. [Univariate Analysis](#univariate-analysis)
-      1. [Target Variable](#target-variable)
-      2. [Numerical Variables Distribution](#numerical-variables-distribution)
-      3. [Categorical](#categorical)
-   2. [Bivariate Analysis](#bivariate-analysis)
-   3. [Multivariate Analysis](#multivariate-analysis)
-      1. [Numerical Attributes](#numerical-attributes)
-      2. [Categorical Variables](#categorical-variables)
-4. [Machine Learning Model](#machine-learning-model)
-   1. [Single Performance](#single-performance)
-   2. [Real Performance](#real-performance)
-5. [Business Performance](#business-performance)
+- [Table of Contents](#table-of-contents)
+- [Introduction](#introduction)
+    - [Context](#context)
+    - [The Challenge](#the-challenge)
+- [Data](#data)
+  - [Data Source](#data-source)
+  - [Data Dimension](#data-dimension)
+  - [Columns Description](#columns-description)
+- [Exploratory Data Analysis](#exploratory-data-analysis)
+  - [Univariate Analysis](#univariate-analysis)
+    - [Target Variable](#target-variable)
+    - [Numerical Variables Distribution](#numerical-variables-distribution)
+    - [Categorical Variable](#categorical-variable)
+  - [Bivariate Analysis](#bivariate-analysis)
+  - [Multivariate Analysis](#multivariate-analysis)
+    - [Numerical Attributes](#numerical-attributes)
+    - [Categorical Variables](#categorical-variables)
+- [Feature Selection](#feature-selection)
+- [Machine Learning Model](#machine-learning-model)
+  - [Single Performance](#single-performance)
+  - [Real Performance using Cross Validation](#real-performance-using-cross-validation)
+- [Business Performance](#business-performance)
+  - [1. Main insights on the most relevant attributes of customers interested in purchasing auto insurance.](#1-main-insights-on-the-most-relevant-attributes-of-customers-interested-in-purchasing-auto-insurance)
+  - [2. What percentage of customers interested in purchasing auto insurance will the sales team be able to reach by making 20,000 calls?](#2-what-percentage-of-customers-interested-in-purchasing-auto-insurance-will-the-sales-team-be-able-to-reach-by-making-20000-calls)
+  - [3. If the sales team's capacity increases to 40,000 calls, what percentage of customers interested in purchasing auto insurance will the sales team be able to contact?](#3-if-the-sales-teams-capacity-increases-to-40000-calls-what-percentage-of-customers-interested-in-purchasing-auto-insurance-will-the-sales-team-be-able-to-contact)
+  - [4. How many calls the sales team need to make to contact 80% of customers interested in purchasing auto insurance?](#4-how-many-calls-the-sales-team-need-to-make-to-contact-80-of-customers-interested-in-purchasing-auto-insurance)
 
 # Introduction
 
@@ -89,15 +97,15 @@ The customers with health insurance interest is approximately 9%.
 
 The number of people interested in the service is **46710** and those not interested are **461436**. This shows an imbalance data.
 
-![img01](https://github.com/vfamim/Insurance-all-company/blob/master/img/img01.svg)
+![img01](img/img01.svg)
 
 ### Numerical Variables Distribution
 
-![img02](https://github.com/vfamim/Insurance-all-company/blob/master/img/img02.svg)
+![img02](img/img02.svg)
 
 ### Categorical Variable
 
-![img03](https://github.com/vfamim/Insurance-all-company/blob/master/img/img03.svg)
+![img03](img/img03.svg)
 
 ## Bivariate Analysis
 
@@ -117,20 +125,37 @@ The number of people interested in the service is **46710** and those not intere
 
 ### Numerical Attributes
 
-![img04](https://github.com/vfamim/Insurance-all-company/blob/master/img/img04.svg)
+![img04](img/img04.svg)
 
 ### Categorical Variables
 
-![img05](https://github.com/vfamim/Insurance-all-company/blob/master/img/img05.svg)
+![img05](img/img05.svg)
+
+# Feature Selection
+
+The metric to feature selection was Boruta, an all relevant feature selection wrapper algorithm, capable of working with any classification method that output variable importance measure (VIM); by default, Boruta uses Random Forest. The method performs a top-down search for relevant features by comparing original attributes' importance with importance achievable at random, estimated using their permuted copies, and progressively eliminating irrelevant features to stabilize that test.
+
+| feature              | Rank |  Keep |
+| :------------------- | ---: | ----: |
+| Gender               |    1 |  True |
+| Age                  |    1 |  True |
+| Region_Code          |    1 |  True |
+| Previously_Insured   |    1 |  True |
+| Vehicle_Damage       |    1 |  True |
+| Annual_Premium       |    1 |  True |
+| Policy_Sales_Channel |    1 |  True |
+| age_class            |    1 |  True |
+| Vehicle_Age_0        |    1 |  True |
+| Vehicle_Age_1        |    1 |  True |
+| Vehicle_Age_2        |    1 |  True |
 
 # Machine Learning Model
 
  We applied the following machine learning model to predict:
 
-* Baseline (dummy)
 * Logistic Regression
-* Random Forest
-* XGBoost
+* Decision Tree
+* XGBoost Classifier
 
 ## Single Performance
 
@@ -142,7 +167,7 @@ The number of people interested in the service is **46710** and those not intere
 |     XGBoost Classifier |  0.734035 | 0.218129 | 0.732605 | 0.336166 | 0.733393 |
 | XGBooster Classifier + |  0.814799 | 0.242811 | 0.479019 | 0.322267 | 0.663904 |
 
-## Real Performance (Cross Validation)
+## Real Performance using Cross Validation
 
 |                          |   test_Accuracy   |  test_Precision   |       test_Recall |           test_F1 |     test_ROC      |
 | -----------------------: | :---------------: | :---------------: | ----------------: | ----------------: | :---------------: |
@@ -155,54 +180,37 @@ For the context of the project, the metric chosen was the ROC curve.
 
 > The ROC curve is created by plotting the true positive rate (TPR) against the false positive rate (FPR) at various threshold settings. 
 
+<img src="img/img06.svg" style="zoom:80%;" />
+
+> The value of AUC ranges from 0.0 to 1.0 and the threshold between the class is 0.5. That is, above this limit, the algorithm classifies in one class and below in the other class.
+
+> The higher the AUC, better.
+
+Among the models, the XGBoost Classifier perform better. The Hyperparameter Fine Tuning technique GridSearchCV was used. 
+
+GridSearchCV tries all the combinations of the values passed in the dictionary and evaluates the model for each combination using the Cross-Validation method. Hence after using this function we get accuracy/loss for every combination of hyperparameters and we can choose the one with the best performance.
+
 # Business Performance
 
 ## 1. Main insights on the most relevant attributes of customers interested in purchasing auto insurance.
 
-The metric to feature selection was Boruta, an all relevant feature selection wrapper algorithm, capable of working with any classification method that output variable importance measure (VIM); by default, Boruta uses Random Forest. The method performs a top-down search for relevant features by comparing original attributes' importance with importance achievable at random, estimated using their permuted copies, and progressively eliminating irrelevant features to stabilize that test.
+* Customers with age between 40 and 50 have more interesting in insurance health.
 
-| feature              | Rank |  Keep |
-| :------------------- | ---: | ----: |
-| Gender               |    1 |  True |
-| Age                  |    1 |  True |
-| Driving_License      |    1 |  True |
-| Region_Code          |    1 |  True |
-| Previously_Insured   |    1 |  True |
-| Vehicle_Damage       |    1 |  True |
-| Annual_Premium       |    1 |  True |
-| Policy_Sales_Channel |    1 |  True |
-| Vintage              |    2 | False |
-| week_vintage         |    3 | False |
-| month_vintage        |    4 | False |
-| Vehicle_Age_0        |    1 |  True |
-| Vehicle_Age_1        |    1 |  True |
-| Vehicle_Age_2        |    1 |  True |
+* Customers who own vehicles between one and two years have more interesting in insurance health.
 
-Among the models, the XGBoost Classifier perform better, it presents results close to the Random Forest Classifier, however with a shorter execution time. The Hyperparameter Fine Tuning technique GridSearchCV was used. 
-
-> GridSearchCV tries all the combinations of the values passed in the dictionary and evaluates the model for each combination using the Cross-Validation method. Hence after using this function we get accuracy/loss for every combination of hyperparameters and we can choose the one with the best performance.
-
-|                      |     test_Accuracy |   test_Precision |      test_Recall |           test_F1 |     test_ROC      |
-| -------------------: | ----------------: | ---------------: | ---------------: | ----------------: | :---------------: |
-| XGBoost Classifier + | 0.8613 +/- 0.1486 | 0.831 +/- 0.0556 | 0.901 +/- 0.3208 | 0.8588 +/- 0.2103 | 0.8613 +/- 0.1486 |
-
-<img src="https://github.com/vfamim/Insurance-all-company/blob/master/img/img06.svg" style="zoom:80%;" />
-
-> The value of AUC ranges from 0.0 to 1.0 and the threshold between the class is 0.5. That is, above this limit, the algorithm classifies in one class and below in the other class.
->
-> The higher the AUC, better.
+* Customers who pay less annual premium are more interesting in insurance health.
 
 ## 2. What percentage of customers interested in purchasing auto insurance will the sales team be able to reach by making 20,000 calls?
 
 The percentage of customers who show interest on the service is 20%.
 
-![img07](https://github.com/vfamim/Insurance-all-company/blob/master/img/img07.svg)
+![img07](img/img07.svg)
 
 ## 3. If the sales team's capacity increases to 40,000 calls, what percentage of customers interested in purchasing auto insurance will the sales team be able to contact?
 
 The increase in sales team capacity from 20,000 to 40,000 has nearly doubled the number of customers acquired.
 
-![img08](https://github.com/vfamim/Insurance-all-company/blob/master/img/img08.svg)
+![img08](img/img08.svg)
 
 ## 4. How many calls the sales team need to make to contact 80% of customers interested in purchasing auto insurance?
 
