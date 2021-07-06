@@ -1,6 +1,5 @@
-# Table of Contents
+<h1> Table of Contents </h1>
 
-- [Table of Contents](#table-of-contents)
 - [Introduction](#introduction)
     - [Context](#context)
     - [The Challenge](#the-challenge)
@@ -202,16 +201,18 @@ GridSearchCV tries all the combinations of the values passed in the dictionary a
 
 ## 2. What percentage of customers interested in purchasing auto insurance will the sales team be able to reach by making 20,000 calls?
 
-The percentage of customers who show interest on the service is 20%.
+20,000 calls represents 20% of total data. The sales team will call to 51% of all interested customers, about 2.6 more time that random method.
 
-![img07](img/img07.svg)
+![img07](img/bp1.png)
 
 ## 3. If the sales team's capacity increases to 40,000 calls, what percentage of customers interested in purchasing auto insurance will the sales team be able to contact?
 
-The increase in sales team capacity from 20,000 to 40,000 has nearly doubled the number of customers acquired.
+40,000 calls represents 39% of total data. The sales team will call to 87% of all interested customers, about 3.9 more time that random method.
 
-![img08](img/img08.svg)
+![img08](img/bp2.png)
 
 ## 4. How many calls the sales team need to make to contact 80% of customers interested in purchasing auto insurance?
 
-To reach the goal, make contact with 80% of costumers: 494630.0 calls.
+To reach 80% of interested customer the sales team need 35093 calls.
+
+![img09](img/bp3.png)
